@@ -16,25 +16,44 @@
     </head>
     <body>
       <header>
-            <nav class="navbar navbar-expand-lg navbar-dark bg-dark ">
-              <div id="navbar" class="collapse navbar-collapse ">
-                <a class="navbar-brand"><img src="/img/hdcevents_logo.svg" alt="HDC Events"></a>
-                <ul class="navbar-nav mr-auto">
-                    <li class="nav-item ">
-                      <a class="nav-link" href="/">Eventos </a>
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+          <div class="collapse navbar-collapse" id="navbar">
+                <a href="/" class="navbar-brand">
+                  <img src="/img/hdcevents_logo.svg" alt="HDC Events">
+                </a>
+                <ul class="navbar-nav">
+              <li class="nav-item">
+                <a href="/" class="nav-link">Eventos </a>
                     </li>
                     <li class="nav-item">
                       <a class="nav-link " href="/events/create">Criar Eventos </a>
                     </li>
-                    <li class="nav-item ">
-                      <a class="nav-link" href="/">Entrar </a>
-                    </li>
-                    <li class="nav-item">
-                      <a class="nav-link " href="/">Cadastrar</a>
-                    </li> 
                      <li class="nav-item">
                       <a class="nav-link " href="/events/contact">Contato</a>
                     </li>
+                    @auth
+                    <li class="nav-item ">
+                      <a class="nav-link" href="/dashboard">Meus eventos </a>
+                    </li>
+                    <li class="nav-item">
+                      <form action="/logout" method="POST">
+                      @csrf
+                      <a href="/logout" class="nav-link"
+                      onclick="event.preventDefault();
+                      this.closest('form').submit();">
+                    Sair  
+                    </a>
+                      </form>
+                    </li> 
+                    @endauth
+                    @guest
+                    <li class="nav-item ">
+                      <a class="nav-link" href="/login">Entrar </a>
+                    </li>
+                    <li class="nav-item">
+                      <a class="nav-link " href="/register">Cadastrar</a>
+                    </li> 
+                    @endguest
                 </ul>
             </div>
           </nav>

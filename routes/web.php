@@ -17,9 +17,21 @@ use  App\Http\Controllers\ContactController;
 */
 
 Route::get('/', [EventController::class, 'index'])->name('events.index');
-Route::get('/events/create', [EventController::class, 'create']);
+Route::get('/events/create', [EventController::class, 'create'])->middleware('auth');
 Route::post('/events', [EventController::class, 'store']);
+Route::get('/events/{id}', [EventController::class, 'show']);
 
 Route::get('/events/contact', [ContactController::class, 'index']);
 
 
+
+
+Route::middleware([
+    'auth:sanctum',
+    config('jetstream.auth_session'),
+    'verified'
+])->group(function () {
+    Route::get('/dashboard', function () {
+        return view('dashboard');
+    })->name('dashboard');
+});

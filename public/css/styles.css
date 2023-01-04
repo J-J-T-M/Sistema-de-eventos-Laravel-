@@ -208,6 +208,12 @@ header
 {
     margin: 20px 0;
 }
+.already-joined-msg
+{
+    margin: 15px 0;
+    color: #34af50;
+
+}
 #items-list
 {
     list-style: none;

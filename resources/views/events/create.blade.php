@@ -33,7 +33,7 @@
         </div>
         <div class="form-group">
             <label for="description">Descrição :</label>
-            <input id="description" class="form-control" type="textarea" name="description"  placeholder="Descrição do evento">
+            <textarea id="description" class="form-control"  name="description"  placeholder="Descrição do evento"></textarea>
         </div>
         <div class="form-group">
             <label for="items">Adicione itens de infraestrutura :</label>

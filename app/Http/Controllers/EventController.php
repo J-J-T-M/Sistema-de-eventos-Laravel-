@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 
 use App\Models\Event;
 use Illuminate\Support\Facades\Redirect;
+use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 
 class EventController extends Controller
 {
@@ -64,6 +66,10 @@ class EventController extends Controller
 
             $event->image = $imageName;
         } 
+        else
+        {
+            $event->image = 'event_placeholder.jpg';
+        }
         
         $user = auth()->user();
         $event->user_id = $user->id;
@@ -77,6 +83,61 @@ class EventController extends Controller
     {
         $event = Event::findOrFail($id);
 
-        return view('events.show',['event' => $event]);
+        $eventOwner =  User::where('id',$event->user_id)->first()->toArray();
+
+        return view('events.show',['event' => $event, 'eventOwner' => $eventOwner]);
+    }
+    public function dashboard()
+    {
+        $user = auth()->user();
+
+        $events = $user->events;
+
+        return view('events.dashboard', ['events' => $events]);
+    }
+    public function destroy($id)
+    {
+        Event::findOrFail($id)->delete();
+
+        return redirect('/dashboard')->with('msg', 'Evento excluído com sucesso!');
+
+    }
+    public function edit($id)
+    {
+        $event = Event::findOrFail($id);
+
+        return view('events.edit',['event' => $event]);
+    }
+    public function update(Request $request)
+    {
+        $data = $request->all();
+        // Image Upload
+        if($request->hasFile('image') && $request->file('image')->isValid())
+        {
+            $requestImage = $request->image;
+            
+            $extension = $requestImage->extension();
+
+            $imageName = md5($requestImage->getClientOriginalName() . strtotime("now")) . "." . $extension;// Criar um nome unico adicionando no nome original da image com o tempo 
+        
+            $requestImage->move(public_path('img/events'), $imageName);
+
+            $data['image'] = $imageName;
+        } 
+        
+        Event::findOrFail($request->id)->update($data);
+
+        return redirect('/dashboard')->with('msg', 'Evento editado com sucesso!');
+    }
+    public function joinEvent($id)
+    {
+        $user = auth()->user();
+
+        $user->eventsAsParticipant()->attach($id);//vai vincular o id do participante e do evento
+
+        $event = Event::findOrFail($id);
+
+        return redirect('/dashboard')->with('msg', 'Sua presença está confirmada no evento '. $event->title.' com sucesso!');
+
     }
 }

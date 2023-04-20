@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Auth;
 class EventController extends Controller
 {
     public function index()
-    {
+{
         $search = request('search');
 
         if ($search)
@@ -25,12 +25,12 @@ class EventController extends Controller
             ->orWhere('description', 'like', "%$search%")
             ->get();
         }
-        else    
+        else
         {
             $events = Event::all();
         }
         return view('welcome',['events' => $events, 'search' => $search]);
-    
+
     }
     public function create()
     {
@@ -57,20 +57,20 @@ class EventController extends Controller
         if($request->hasFile('image') && $request->file('image')->isValid())
         {
             $requestImage = $request->image;
-            
+
             $extension = $requestImage->extension();
 
-            $imageName = md5($requestImage->getClientOriginalName() . strtotime("now")) . "." . $extension;// Criar um nome unico adicionando no nome original da image com o tempo 
-        
+            $imageName = md5($requestImage->getClientOriginalName() . strtotime("now")) . "." . $extension;// Criar um nome unico adicionando no nome original da image com o tempo
+
             $requestImage->move(public_path('img/events'), $imageName);
 
             $event->image = $imageName;
-        } 
+        }
         else
         {
             $event->image = 'event_placeholder.jpg';
         }
-        
+
         $user = auth()->user();
         $event->user_id = $user->id;
 
@@ -110,7 +110,7 @@ class EventController extends Controller
         $eventsAsParticipant = $user->eventsAsParticipant;
 
         return view('events.dashboard', [
-            'events' => $events , 
+            'events' => $events ,
             'eventsAsParticipant' => $eventsAsParticipant]);
     }
     public function destroy($id)
@@ -126,7 +126,7 @@ class EventController extends Controller
 
         $event = Event::findOrFail($id);
 
-        if ($user->id != $event->user_id) 
+        if ($user->id != $event->user_id)
         {
             return redirect('/dashboard');
         }
@@ -140,16 +140,16 @@ class EventController extends Controller
         if($request->hasFile('image') && $request->file('image')->isValid())
         {
             $requestImage = $request->image;
-            
+
             $extension = $requestImage->extension();
 
-            $imageName = md5($requestImage->getClientOriginalName() . strtotime("now")) . "." . $extension;// Criar um nome unico adicionando no nome original da image com o tempo 
-        
+            $imageName = md5($requestImage->getClientOriginalName() . strtotime("now")) . "." . $extension;// Criar um nome unico adicionando no nome original da image com o tempo
+
             $requestImage->move(public_path('img/events'), $imageName);
 
             $data['image'] = $imageName;
-        } 
-        
+        }
+
         Event::findOrFail($request->id)->update($data);
 
         return redirect('/dashboard')->with('msg', 'Evento editado com sucesso!');
@@ -174,6 +174,6 @@ class EventController extends Controller
         $event = Event::findOrFail($id);
 
         return redirect('/dashboard')->with('msg', 'Sua inscrição do evento '. $event->title.' foi cancelada com sucesso!');
-        
+
     }
 }
